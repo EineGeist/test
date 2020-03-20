@@ -49,17 +49,22 @@ const testData = JSON.stringify(
 );
 
 const navigation = {
+  $window: $('.window'),
   $pageStart: $('.page-start'),
   $pageQuestionsNav: $('.page-questions-nav'),
 
   $btnLinks: $('.btn[data-link]'),
 
-  btnLinksListeners() {
-    this.$btnLinks.on('click', e => {
-      const $btn = $(e.currentTarget);
+  btnLinksListener() {
+    this.$window.on('click', e => {
+      const $btn = $(e.target).closest('.btn');
+      if (!$btn) return;
+
+      const link = $btn.attr('data-link');
+      if (!link) return;
 
       const $from = $btn.closest('.page');
-      const $to = $('.' + $btn.attr('data-link'));
+      const $to = $('.' + link);
       this.move($from, $to);
     });
   },
@@ -71,14 +76,16 @@ const navigation = {
 };
 
 const test = {
-  build() {
+  extractData() {
     const data = this.data = JSON.parse(testData);
     this.questionsAmout = data.questions.length;
     console.dir(this.data);
+  },
 
+  build() {
     this
       .buildStart()
-      .buildQnNav();
+      .buildQnsNav();
   },
 
   buildStart() {
@@ -92,7 +99,6 @@ const test = {
         .insertAfter($pageStart.find('.page_header'));
     }
 
-
     if (description) {
       $(document.createElement('p'))
         .text(description)
@@ -102,23 +108,26 @@ const test = {
     return this;
   },
 
-  buildQnNav() {
-    const $pageQnNavContent = $('.page-qn-nav_content');
+  buildQnsNav() {
+    const $pageQnsNavContent = $('.page-qns-nav_content');
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < this.questionsAmout; i++) {
       $(document.createElement('button'))
         .addClass('btn')
         .addClass('btn--colored')
-        .addClass('page_qn-btn')
+        .addClass('page-qns-nav_qn-link')
+        .attr('data-link', `page-qn_${i + 1}`)
         .text(`Вопрос ${i + 1}`)
-        .appendTo($pageQnNavContent);
+        .appendTo($pageQnsNavContent);
     }
 
     return this;
   }
 };
 
+test.extractData();
+
 $(() => {
-  navigation.btnLinksListeners();
+  navigation.btnLinksListener();
   test.build();
 });
