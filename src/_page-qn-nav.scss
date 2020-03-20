@@ -1,0 +1,10 @@
+.page-qn-nav_content {
+  @include vp-flexbox;
+  @include vp-flex-flow(column wrap);
+  @include vp-align-items(center);
+  @include vp-justify-content(center);
+}
+
+.page_qn-btn {
+  margin: 0 0 0.5em;
+}

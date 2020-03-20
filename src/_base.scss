@@ -1,0 +1,22 @@
+*, *::before, *::after {
+  @include vp-box-sizing(border-box);
+}
+
+html {
+  font-family: "Ubuntu", sans-serif;
+  font-size: 1.125em; // 18px
+  color: $second_color;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  @include vp-flexbox;
+  @include vp-align-items(center);
+  @include vp-justify-content(center);
+}

@@ -8,14 +8,22 @@
 <body>
 
 <main class="window">
-    <section class="page-start window-inner">
-        <span class="page-start_title-top page-start_title">Тестирование по</span>
-        <span class="page-start_title-bottom page-start_title">JavaScript</span>
-        <div class="page-start_content page-content">
-            <button class="page-start_start-btn btn btn--colored">Начать</button>
+    <section class="page-start page">
+        <header class="page_header page-start_title">Тестирование</header>
+        <div class="page-start_content page_content">
+            <div class="page-start_des"></div>
+            <button class="page-start_btn btn btn--colored btn--big" data-link="page-qn-nav">Начать</button>
+        </div>
+    </section>
+
+    <section class="page-qn-nav page">
+        <header class="page_header">Вопросы</header>
+        <div class="page-qn-nav_content page_content">
         </div>
     </section>
 </main>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <script src="main.js"></script>
 </body>
