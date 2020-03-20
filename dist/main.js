@@ -7,8 +7,9 @@ const testData = JSON.stringify(
       "        quis similique vero voluptatibus? A beatae dicta, eum ex incidunt iusto quaerat saepe ullam.",
     "questions": [
       {
-        "text": "Вопрос 1",
-        "imageSrc": null,
+        "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab cupiditate eveniet facilis impedit iure laudantium\n" +
+          "    maxime nisi, quam repellat temporibus. Animi aut distinctio dolor earum, enim facilis ipsa ratione tempora?",
+        "imageSrc": "images/img1.png",
         "answers":
           [
             {
@@ -26,7 +27,8 @@ const testData = JSON.stringify(
           }
           ]
       }, {
-        "text": "Вопрос 2",
+        "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab cupiditate eveniet facilis impedit iure laudantium\n" +
+          "    maxime nisi, quam repellat temporibus. Animi aut distinctio dolor earum, enim facilis ipsa ratione tempora?",
         "imageSrc": null,
         "answers": [
           {
@@ -55,10 +57,10 @@ const navigation = {
 
   $btnLinks: $('.btn[data-link]'),
 
-  btnLinksListener() {
+  enableLinksListener() {
     this.$window.on('click', e => {
       const $btn = $(e.target).closest('.btn');
-      if (!$btn) return;
+      if (!$btn.length) return;
 
       const link = $btn.attr('data-link');
       if (!link) return;
@@ -71,22 +73,66 @@ const navigation = {
 
   move($from, $to) {
     $from.css('left', '-100%');
-    $to.css('left', '0');
+    if ($from.hasClass('page--move-right')) $from.css('left', '100%');
+
+    $to.css({
+      'left': '0',
+    });
   }
 };
 
-const test = {
+class Test {
+  #answered = [];
+  #correctAnswers = [];
+
+  constructor() {
+    if (Test.instance) return Test.instance;
+    Test.instance = this;
+
+    this
+      .extractData()
+      .build()
+      .enableAnswerListener();
+  }
+
   extractData() {
     const data = this.data = JSON.parse(testData);
     this.questionsAmout = data.questions.length;
     console.dir(this.data);
-  },
+
+    return this;
+  }
+
+  enableAnswerListener() {
+    $('.page-qn').on('click', e => {
+      const $btn = $(e.target).closest('.page-qn_answer');
+      if (!$btn.length || $btn.prop('disabled')) return;
+
+      const answeredQuestion = $(e.currentTarget).data('qnNum');
+      this.#answered.push(answeredQuestion);
+      if ($btn.data('isCorrect')) this.#correctAnswers.push(answeredQuestion);
+
+
+      $btn.addClass('btn--colored')
+        .prop('disabled', true);
+
+      $btn.siblings('.page-qn_answer')
+        .prop('disabled', true);
+
+      $(e.currentTarget).find('.page-qn_btn-next')
+        .addClass('btn--colored')
+        .text('Следующий вопрос');
+    });
+
+    return this;
+  }
 
   build() {
-    this
+    return this
       .buildStart()
-      .buildQnsNav();
-  },
+      .buildQnsNav()
+      .buildQns();
+  }
 
   buildStart() {
     const {name, description} = this.data;
@@ -106,7 +152,7 @@ const test = {
     }
 
     return this;
-  },
+  }
 
   buildQnsNav() {
     const $pageQnsNavContent = $('.page-qns-nav_content');
@@ -116,18 +162,117 @@ const test = {
         .addClass('btn')
         .addClass('btn--colored')
         .addClass('page-qns-nav_qn-link')
-        .attr('data-link', `page-qn_${i + 1}`)
+        .attr('data-link', `page-qn-${i + 1}`)
         .text(`Вопрос ${i + 1}`)
         .appendTo($pageQnsNavContent);
     }
 
     return this;
   }
+
+  buildQns() {
+    const questions = this.data.questions;
+    const elementsArray = this.qnsElements = [];
+
+    for (let i = 0; i < this.questionsAmout; i++) {
+      const {text, answers, imageSrc} = questions[i];
+
+      elementsArray.push(
+        $(document.createElement('section'))
+          .data('qnNum', i)
+          .addClass('page-qn')
+          .addClass(`page-qn-${i + 1}`)
+          .addClass('page')
+          .addClass('page--move-right')
+          .append(this.getHeader(i))
+          .append(
+            this.getContent()
+              .append(this.getQuestion(text, imageSrc))
+              .append(this.getAnswers(answers))
+              .append(this.getButtons(i))
+          ).appendTo('.window')
+      );
+    }
+
+    return this;
+  }
+
+  getHeader(index) {
+    return $(document.createElement('header'))
+      .addClass('page_header')
+      .text(`Вопрос ${index + 1}`);
+  }
+
+  getContent() {
+    return $(document.createElement('div'))
+      .addClass('page-qn_content')
+      .addClass('page_content');
+  }
+
+  getQuestion(text, imageSrc) {
+    const $question = $(document.createElement('div'))
+      .addClass('page-qn_question');
+    if (imageSrc) $question.append(this.getImage(imageSrc));
+    $question.append(this.getText(text));
+
+    return $question;
+  }
+
+  getImage(src) {
+    return $(document.createElement('img'))
+      .addClass('page-qn_question-img')
+      .attr('src', src);
+  }
+
+  getText(text) {
+    return $(document.createElement('div'))
+      .addClass('page-qn_question-text')
+      .append(
+        $(document.createElement('p')).text(text)
+      );
+  }
+
+  getAnswers(answers) {
+    return $(document.createElement('ul'))
+      .addClass('page-qn_answers-list')
+      .append(
+        ...answers.map(answer => {
+          return $(document.createElement('li'))
+            .data('isCorrect', answer.isCorrect)
+            .addClass('page-qn_answer')
+            .addClass('btn')
+            .text(answer.text);
+        })
+      );
+  }
+
+  getButtons(index) {
+     const $container = $(document.createElement('div'))
+      .addClass('page-qn_btns-container')
+      .append(
+        $(document.createElement('button'))
+          .addClass('page-qn_btn')
+          .addClass('btn')
+          .attr('data-link', 'page-qns-nav')
+          .text('Вернуться')
+      );
+
+     if (index + 1 < this.questionsAmout) {
+       $container.append(
+         $(document.createElement('button'))
+           .addClass('page-qn_btn')
+           .addClass('page-qn_btn-next')
+           .addClass('btn')
+           .attr('data-link', `page-qn-${index + 2}`)
+           .text('Пропустить')
+       );
+     }
+
+     return $container;
+  }
 };
 
-test.extractData();
-
 $(() => {
-  navigation.btnLinksListener();
-  test.build();
+  navigation.enableLinksListener();
+  new Test();
 });

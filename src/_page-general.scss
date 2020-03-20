@@ -1,4 +1,4 @@
-$btn-vertical-padding: 0.5em;
+$btn-vertical-padding: 0.2em;
 $btn-horizontal-padding: 0.75em;
 
 .btn {
@@ -14,13 +14,12 @@ $btn-horizontal-padding: 0.75em;
   overflow: hidden;
 
   font-size: 1.5em;
-  line-height: 1;
   cursor: pointer;
 
   &::after {
     content: "";
     position: absolute;
-    bottom: $btn-vertical-padding / 2;
+    bottom: $btn-vertical-padding;
     left: 50%;
 
     display: block;
@@ -101,7 +100,8 @@ $btn-horizontal-padding: 0.75em;
     $first_color: $yellow_orange;
 
     .page_header,
-    .btn--colored {
+    .btn--colored,
+    .page-qn_answer.is-selected {
       background-color: $first_color;
     }
   }
@@ -110,7 +110,8 @@ $btn-horizontal-padding: 0.75em;
     $first_color: $lochmara;
 
     .page_header,
-    .btn--colored {
+    .btn--colored,
+    .page-qn_answer.is-selected {
       background-color: $first_color;
     }
   }
@@ -119,7 +120,8 @@ $btn-horizontal-padding: 0.75em;
     $first_color: $persian_red;
 
     .page_header,
-    .btn--colored {
+    .btn--colored,
+    .page-qn_answer.is-selected {
       background-color: $first_color;
     }
   }
@@ -128,7 +130,8 @@ $btn-horizontal-padding: 0.75em;
     $first_color: $limeade;
 
     .page_header,
-    .btn--colored {
+    .btn--colored,
+    .page-qn_answer.is-selected {
       background-color: $first_color;
     }
   }
@@ -137,7 +140,8 @@ $btn-horizontal-padding: 0.75em;
     $first_color: $bondi_blue;
 
     .page_header,
-    .btn--colored {
+    .btn--colored,
+    .page-qn_answer.is-selected {
       background-color: $first_color;
     }
   }
@@ -146,7 +150,8 @@ $btn-horizontal-padding: 0.75em;
     $first_color: $mandy;
 
     .page_header,
-    .btn--colored {
+    .btn--colored,
+    .page-qn_answer.is-selected {
       background-color: $first_color;
     }
   }
@@ -155,7 +160,8 @@ $btn-horizontal-padding: 0.75em;
     $first_color: $moody_blue;
 
     .page_header,
-    .btn--colored {
+    .btn--colored,
+    .page-qn_answer.is-selected {
       background-color: $first_color;
     }
   }
@@ -164,7 +170,8 @@ $btn-horizontal-padding: 0.75em;
     $first_color: $yellow_orange;
 
     .page_header,
-    .btn--colored {
+    .btn--colored,
+    .page-qn_answer.is-selected {
       background-color: $first_color;
     }
   }

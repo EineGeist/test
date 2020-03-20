@@ -1,5 +1,6 @@
 /node_modules/
 /.idea/
+/dist/images/
 
 /package-lock.json
 /dist/style.css
