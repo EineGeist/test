@@ -1,3 +1,7 @@
+* {
+  max-width: 100%; // IE fix
+}
+
 *, *::before, *::after {
   @include vp-box-sizing(border-box);
 }
