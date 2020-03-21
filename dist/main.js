@@ -2,53 +2,103 @@
 
 const testData = JSON.stringify(
   {
-    "name": "JavaScript",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad autem, beatae dignissimos ducimus fugit nemo nihil\n" +
-      "        quis similique vero voluptatibus? A beatae dicta, eum ex incidunt iusto quaerat saepe ullam.",
+    "name": "Английский язык",
+    "description": "",
     "evaluation": {
-      "bad": "25",
-      "moderate": "50",
-      "good": "75",
-      "excellent": "100"
+      "bad": "30",
+      "moderate": "60",
+      "good": "100"
     },
 
     "questions": [
       {
-        "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab cupiditate eveniet facilis impedit iure laudantium\n" +
-          "    maxime nisi, quam repellat temporibus. Animi aut distinctio dolor earum, enim facilis ipsa ratione tempora?",
-        "imageSrc": "images/img1.png",
+        "text": "It _______ her being a teacher, I can't imagine her doing anything else.",
+        "imageSrc": "",
         "answers":
           [
             {
-              "text": "Ответ 1",
+              "text": "fits",
               "isCorrect": false
             }, {
-            "text": "Ответ 2",
-            "isCorrect": false
-          }, {
-            "text": "Ответ 3",
-            "isCorrect": false
-          }, {
-            "text": "Ответ 4",
-            "isCorrect": true
-          }
+              "text": "matches",
+              "isCorrect": false
+            }, {
+              "text": "suits",
+              "isCorrect": true
+            }
           ]
       }, {
-        "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab cupiditate eveniet facilis impedit iure laudantium\n" +
-          "    maxime nisi, quam repellat temporibus. Animi aut distinctio dolor earum, enim facilis ipsa ratione tempora?",
+        "text": "As soon as my grandma sits in front of the TV, she _______. I don't mind really, it's just that she snores so loudly I can't hear what they're saying on the telly!",
         "imageSrc": null,
         "answers": [
           {
-            "text": "Ответ 1",
+            "text": "sleeps off",
             "isCorrect": false
           }, {
-            "text": "Ответ 2",
-            "isCorrect": false
-          }, {
-            "text": "Ответ 3",
+            "text": "nods off",
             "isCorrect": true
           }, {
-            "text": "Ответ 4",
+            "text": "node of",
+            "isCorrect": false
+          }
+        ]
+      }, {
+        "text": "If you feel sad because your boyfriend or girlfriend leaves you, you may be suffering from _________ .",
+        "imageSrc": null,
+        "answers": [
+          {
+            "text": "a pain in your heart",
+            "isCorrect": false
+          }, {
+            "text": "a painful heart",
+            "isCorrect": false
+          }, {
+            "text": "heartache",
+            "isCorrect": true
+          }
+        ]
+      }, {
+        "text": "If you’ve got heavy bags to carry, you'd be ________ a taxi.",
+        "imageSrc": null,
+        "answers": [
+          {
+            "text": "better off taking",
+            "isCorrect": true
+          }, {
+            "text": "well-off taking",
+            "isCorrect": false
+          }, {
+            "text": "better of taking",
+            "isCorrect": false
+          }
+        ]
+      }, {
+        "text": "There was no room in the hotel, so they were __________ at the B&B nearby.",
+        "imageSrc": null,
+        "answers": [
+          {
+            "text": "accommodated",
+            "isCorrect": true
+          }, {
+            "text": "accomodated",
+            "isCorrect": false
+          }, {
+            "text": "acommodated",
+            "isCorrect": false
+          }
+        ]
+      }, {
+        "text": "You can only have your money back if you can produce _______ .",
+        "imageSrc": null,
+        "answers": [
+          {
+            "text": "a receipt",
+            "isCorrect": true
+          }, {
+            "text": "an invoice",
+            "isCorrect": false
+          }, {
+            "text": "a bill",
             "isCorrect": false
           }
         ]
@@ -266,7 +316,7 @@ class Test {
       return $answer.data('isCorrect');
     });
 
-    let result = (correctAnswers.length / this.questionsAmout) * 100;
+    let result = ((correctAnswers.length / this.questionsAmout) * 100).toFixed(0);
 
     $('.page-results_correct-amount')
       .text(`${correctAnswers.length}/${this.questionsAmout}`);
@@ -280,8 +330,7 @@ class Test {
 
     if (result <= bad) resultEvaluation = 'bad';
     else if (result <= moderate) resultEvaluation = 'moderate';
-    else if (result <= good) resultEvaluation = 'good';
-    else resultEvaluation = 'excellent';
+    else resultEvaluation = 'good';
 
     $('.page-results')
       .addClass(`is-${resultEvaluation}`)

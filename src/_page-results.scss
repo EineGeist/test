@@ -3,22 +3,8 @@
   left: 0;
   top: 100%;
 
-  &.is-excellent {
-    $color: $limeade;
-
-    .page-results_header,
-    .btn--colored {
-      background-color: $color;
-    }
-
-    .page-results_correct-amount,
-    .page-results_correct-percentage {
-      color: $color;
-    }
-  }
-
   &.is-good {
-    $color: $glade_green;
+    $color: $limeade;
 
     .page-results_header,
     .btn--colored {
