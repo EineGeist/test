@@ -1,22 +1,43 @@
 {
   "name": "test",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "homepage": "https://einegeist.github.io/test",
   "description": "Test Application",
   "main": "dist/index.js",
   "scripts": {
+    "transpile:babel": "npx babel src/main.js --out-file dist/script.js",
+    "watch:babel": "npx babel src/main.js -w --out-file dist/script.js",
     "build:sass": "sass src/style.scss dist/style.css",
     "watch:sass": "sass --watch src/style.scss dist/style.css",
     "push:master": "git push -u origin master",
     "push:gh-pages": "gh-pages -d dist",
     "deploy": "npm run push:master && npm run push:gh-pages"
   },
+  "repository": {
+    "type": "git"
+  },
   "author": "Ivan Dovzhikov",
   "license": "MIT",
   "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.9.0",
     "gh-pages": "^2.2.0",
     "normalize.css": "^8.0.1",
     "sass": "^1.26.3",
     "sass-autoprefixer": "^1.0.1"
+  },
+  "browserslist": [
+    "> 1%",
+    "IE 11"
+  ],
+  "babel": {
+    "plugins": [
+      "@babel/plugin-proposal-class-properties"
+    ],
+    "presets": [
+      "@babel/preset-env"
+    ]
   }
 }

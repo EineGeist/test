@@ -5,4 +5,5 @@
 /package-lock.json
 /dist/style.css
 /dist/style.css.map
-/dist/questions.json
+/dist/script.js
+/dist/page_icon.png
