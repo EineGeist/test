@@ -347,6 +347,10 @@ template {
   display: none;
 }
 
+* {
+  max-width: 100%;
+}
+
 *, *::before, *::after {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -809,6 +813,7 @@ body {
   justify-content: center;
   padding: 10% 15%;
   font-size: 2em;
+  text-align: center;
 }
 
 .page-results_correct-percentage {
