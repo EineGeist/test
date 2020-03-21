@@ -1,0 +1,74 @@
+.page-results {
+  z-index: 1000;
+  left: 0;
+  top: 100%;
+
+  &.is-excellent {
+    $color: $limeade;
+
+    .page-results_header,
+    .btn--colored {
+      background-color: $color;
+    }
+
+    .page-results_correct-amount,
+    .page-results_correct-percentage {
+      color: $color;
+    }
+  }
+
+  &.is-good {
+    $color: $glade_green;
+
+    .page-results_header,
+    .btn--colored {
+      background-color: $color;
+    }
+
+    .page-results_correct-amount,
+    .page-results_correct-percentage {
+      color: $color;
+    }
+  }
+
+  &.is-moderate {
+    $color: $yellow_orange;
+
+    .page-results_header,
+    .btn--colored {
+      background-color: $color;
+    }
+
+    .page-results_correct-amount,
+    .page-results_correct-percentage {
+      color: $color;
+    }
+  }
+
+  &.is-bad {
+    $color: $mandy;
+
+    .page-results_header,
+    .btn--colored {
+      background-color: $color;
+    }
+
+    .page-results_correct-amount,
+    .page-results_correct-percentage {
+      color: $color;
+    }
+  }
+}
+
+.page-results_content {
+  @include vp-flexbox;
+  @include vp-flex-direction(column);
+  @include vp-align-items(center);
+  @include vp-justify-content(center);
+  padding: 10% 15%;
+  font-size: 2em;
+}
+
+.page-results_correct-percentage {
+  font-size: 1.5em;
+}

@@ -1,10 +1,31 @@
 .page-qns-nav_content {
   @include vp-flexbox;
+  @include vp-flex-direction(column);
+  @include vp-align-items(center);
+}
+
+.page-qns-nav_list {
+  @include vp-flex-grow(1);
+  @include vp-flexbox;
   @include vp-flex-flow(column wrap);
   @include vp-align-items(center);
   @include vp-justify-content(center);
+  margin: 0;
+  list-style: none;
 }
 
 .page-qns-nav_qn-link {
   margin: 0 0 0.5em;
+
+  &.is-answered {
+    opacity: 0.5;
+  }
+}
+
+.page-qns-nav_finish:not(.btn--colored) {
+  color: rgba($second_color,0.5);
+
+  &::after {
+    background-color: rgba($second_color,0.5);
+  }
 }

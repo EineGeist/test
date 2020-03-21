@@ -1,5 +1,5 @@
-@import "../node_modules/sass-autoprefixer/scss/prefixes.scss";
-@import "../node_modules/normalize.css/normalize.css";
+@import "../node_modules/sass-autoprefixer/scss/prefixes";
+@import "../node_modules/normalize.css/normalize";
 
 @import "_utilities";
 @import "_base";
@@ -7,3 +7,4 @@
 @import "_page-start";
 @import "_page-qns-nav";
 @import "_page-qn";
+@import "_page-results";
