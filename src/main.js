@@ -109,36 +109,30 @@ const testData = JSON.stringify(
 
 const navigation = {
   $window: $('.window'),
-  $pageStart: $('.page-start'),
-  $pageQuestionsNav: $('.page-questions-nav'),
-
-  $btnLinks: $('.btn[data-link]'),
 
   enableLinksListener() {
     this.$window.on('click', e => {
       const $btn = $(e.target).closest('.btn');
       if (!$btn.length) return;
 
-      const link = $btn.attr('data-link');
+      const link = $btn.data('link');
       if (!link) return;
 
       const $from = $btn.closest('.page');
-      const $to = $('.' + link);
+      const $to = $(link);
       this.move($from, $to);
     });
   },
 
   move($from, $to) {
-    $from.css('left', '-100%');
-    if ($from.hasClass('page--move-right')) $from.css('left', '100%');
-
-    $to.css({
-      'left': '0',
-    });
+    $from.data('hide')();
+    $to.data('show')();
   }
 };
 
 class Test {
+  $window = $('.window');
+
   constructor() {
     if (Test.instance) return Test.instance;
     Test.instance = this;
@@ -152,97 +146,106 @@ class Test {
 
   extractData() {
     const data = this.data = JSON.parse(testData);
-    this.questionsAmout = data.questions.length;
+    this.questionsAmount = data.questions.length;
 
     return this;
   }
 
   enableAnswerListener() {
-    $('.page-qn').on('click', this.answerHandlerBounded);
+    $('.page-qn').on('click', this.answerHandler);
 
     return this;
   }
 
   answeredAmount = 0;
-  answerHandler(e) {
-    const $btn = $(e.target).closest('.page-qn_answer');
-    if (!$btn.length) return;
+  answerHandler = ({target, currentTarget: page}) => {
+    const $answer = $(target).closest('.page-qn_answer');
+    if (!$answer.length) return;
+
+    this.selectAnswer($(page), $answer);
+
+    if (this.answeredAmount >= this.questionsAmount) {
+      this.answersGivenHandler();
+    }
+  };
+
+  selectAnswer($page, $answer) {
+    // Убирает выделение других ответов если таковые были
+    // Если нет, то инкремирует счетчик отвеченых вопросов
+    const $previousSelected = $answer.siblings('.is-selected')
+      .removeClass('btn--colored')
+      .removeClass('is-selected');
+
+    if (!($previousSelected.length || $answer.hasClass('is-selected'))) {
+      ++this.answeredAmount;
+    }
 
     // Выделяет выбранный ответ
-    $btn
+    $answer
       .addClass('btn--colored')
       .addClass('is-selected');
 
-    // Убирает выделение других ответов если таковые были
-    // Если нет, то инкремирует счетчик отвеченых вопросов
-    const $previousSelected = $btn.siblings('.is-selected');
-    if ($previousSelected.length) {
-      $previousSelected
-        .removeClass('btn--colored')
-        .removeClass('is-selected');
-    } else this.answeredAmount++;
-
     // Добавляет прозрачность ссылке в навигации на отвченый вопрос
-    const index = $('.page-qn').index(e.currentTarget);
-
-    $('.page-qns-nav_qn-link')
+    const index = $page.data('index');
+    $('.page-menu_qn-link')
       .eq(index)
       .addClass('is-answered');
 
     // Меняет надпись на ссылке на следующий вопрос, выделяет ее
-    $(e.currentTarget).find('.page-qn_btn-next')
+    $page.find('.page-qn_nav-next')
       .addClass('btn--colored')
       .text('Следующий вопрос');
-
-    // Проверяет отвечены ли все вопросы
-    if (this.answeredAmount === this.questionsAmout) {
-      // Выделяет кнопку кнопку окончания теста
-      $('.page-qns-nav_finish').addClass('btn--colored');
-
-      $('.page-qn_btns-container').each((index, container) => {
-        const $container = $(container);
-        let $buttonNext = $container.find('.page-qn_btn-next');
-
-        if (!$buttonNext.length) {
-          $buttonNext = this.getButtonNext()
-            .appendTo($container);
-        }
-
-        $buttonNext
-          .addClass('btn--colored')
-          .addClass('page-qns-nav_finish')
-          .text('Закончить')
-          .off('click', this.answerHandlerBounded)
-          .on('click', this.finishHandlerBounded);
-      });
-    }
   }
-  answerHandlerBounded = this.answerHandler.bind(this);
+
+  answersGivenHandler() {
+    $('.page-menu_finish').addClass('btn--colored');
+
+    $('.page-qn_nav-container').each((index, container) => {
+      const $container = $(container);
+      let $buttonNext = $container.find('.page-qn_nav-next');
+
+      if (!$buttonNext.length) {
+        const {questions, questionsAmount} = this;
+        $buttonNext = questions[questionsAmount - 1]
+          .getButtonNext(null)
+          .appendTo($container);
+      }
+
+      $buttonNext
+        .addClass('btn--colored')
+        .addClass('page-menu_finish')
+        .text('Закончить')
+        .off('click', this.answerHandler)
+        .on('click', this.finishHandler);
+    });
+  }
 
   enableFinishListener() {
-    $('.page-qns-nav_finish').on('click', this.finishHandlerBounded);
+    $('.page-menu_finish').on('click', this.finishHandler);
 
     return this;
   }
 
-  finishHandler(e) {
-    const $btn = $(e.target).closest('.page-qns-nav_finish');
+  finishHandler = ({target}) => {
+    const $btn = $(target).closest('.page-menu_finish');
     if (!$btn.length) return;
 
     this.buildResults();
-  }
-  finishHandlerBounded = this.finishHandler.bind(this);
+  };
 
   build() {
     return this
       .buildStart()
-      .buildQnsNav()
-      .buildQns();
+      .buildQuestionPages()
+      .buildMenu();
   }
 
   buildStart() {
     const {name, description} = this.data;
     const $pageStart = $('.page-start');
+
+    $pageStart.data('hide', () => $pageStart.css('left', '-100%'));
+    $pageStart.find('.page-start_btn').data('link', '.page-menu');
 
     if (name) {
       $(document.createElement('span'))
@@ -260,46 +263,43 @@ class Test {
     return this;
   }
 
-  buildQnsNav() {
-    const $pageQnsNavList = $('.page-qns-nav_list');
+  buildQuestionPages() {
+    const {questionsAmount, $window} = this;
+    const questionsData = this.data.questions;
 
-    for (let i = 0; i < this.questionsAmout; i++) {
-      $(document.createElement('li'))
-        .append(
-          $(document.createElement('button'))
-            .addClass('btn')
-            .addClass('btn--colored')
-            .addClass('page-qns-nav_qn-link')
-            .attr('data-link', `page-qn-${i + 1}`)
-            .text(`Вопрос ${i + 1}`)
-        ).appendTo($pageQnsNavList);
+    const questions = this.questions = [];
+    for (let i = 0; i < questionsAmount; i++) {
+      questions.push(new QuestionPage(questionsData[i], i, questionsAmount));
     }
+
+    const $questionPages = questions.map(page => {
+      return page.$page;
+    });
+
+    $window.append(...$questionPages);
 
     return this;
   }
 
-  buildQns() {
-    const questions = this.data.questions;
-    const elementsArray = this.qnsElements = [];
+  buildMenu() {
+    const {questions} = this;
+    const $menu = $('.page-menu');
+    const $questionsList = $menu.find('.page-menu_qns-list');
 
-    for (let i = 0; i < this.questionsAmout; i++) {
-      const {text, answers, imageSrc} = questions[i];
+    $menu.data({
+      'show': () => $menu.css('left', '0'),
+      'hide': () => {}
+    });
 
-      elementsArray.push(
-        $(document.createElement('section'))
-          .data('qnNum', i)
-          .addClass(`page-qn-${i + 1}`)
-          .addClass('page-qn')
-          .addClass('page')
-          .addClass('page--move-right')
-          .append(this.getHeader(i))
-          .append(
-            this.getContent()
-              .append(this.getQuestion(text, imageSrc))
-              .append(this.getAnswers(answers))
-              .append(this.getButtons(i))
-          ).appendTo('.window')
-      );
+    for (let i = 0; i < this.questionsAmount; i++) {
+      questions[i].menuLink =
+        $(document.createElement('li'))
+            .addClass('btn')
+            .addClass('btn--colored')
+            .addClass('page-menu_qn-link')
+            .data('link', `.page-qn-${i + 1}`)
+            .text(`Вопрос ${i + 1}`
+          ).appendTo($questionsList);
     }
 
     return this;
@@ -316,10 +316,10 @@ class Test {
       return $answer.data('isCorrect');
     });
 
-    let result = ((correctAnswers.length / this.questionsAmout) * 100).toFixed(0);
+    let result = ((correctAnswers.length / this.questionsAmount) * 100).toFixed(0);
 
     $('.page-results_correct-amount')
-      .text(`${correctAnswers.length}/${this.questionsAmout}`);
+      .text(`${correctAnswers.length}/${this.questionsAmount}`);
 
     $('.page-results_correct-percentage')
       .text(`${result}%`);
@@ -330,7 +330,7 @@ class Test {
 
     if (result <= bad) resultEvaluation = 'bad';
     else if (result <= moderate) resultEvaluation = 'moderate';
-    else resultEvaluation = 'good';
+    else if (result <= good) resultEvaluation = 'good';
 
     $('.page-results')
       .addClass(`is-${resultEvaluation}`)
@@ -338,22 +338,71 @@ class Test {
 
     return this;
   }
+}
 
-  getHeader(index) {
+class Page {
+  constructor() {}
+
+  getPage() {
+    return $(document.createElement('section'))
+      .addClass('page');
+  }
+
+  getHeader() {
     return $(document.createElement('header'))
-      .addClass('page_header')
-      .text(`Вопрос ${index + 1}`);
+      .addClass('page_header');
   }
 
   getContent() {
     return $(document.createElement('div'))
-      .addClass('page-qn_content')
       .addClass('page_content');
   }
+}
 
-  getQuestion(text, imageSrc) {
+class QuestionPage extends Page {
+  constructor(data, index, questionsAmount) {
+    super();
+    this.data = data;
+    this.index = index;
+    this.questionsAmount = questionsAmount;
+
+    this.$page = this.getPage();
+  }
+
+  getPage() {
+    const $page = super.getPage()
+      .addClass(`page-qn-${this.index + 1}`)
+      .addClass('page-qn')
+      .append(this.getHeader())
+      .append(this.getContent())
+      .data({
+        'show': () => $page.css('top', '0'),
+        'hide': () => $page.css('top', '-100%'),
+        'index': this.index
+      });
+
+    return $page;
+  }
+
+  getHeader() {
+    return super.getHeader()
+      .text(`Вопрос ${this.index + 1}`);
+  }
+
+  getContent() {
+    return super.getContent()
+      .addClass('page-qn_content')
+      .append(this.getQuestion())
+      .append(this.getAnswers())
+      .append(this.getButtons());
+  }
+
+  getQuestion() {
+    const {text, imageSrc} = this.data;
+
     const $question = $(document.createElement('div'))
-      .addClass('page-qn_question');
+      .addClass('page-qn_qn');
+
     if (imageSrc) $question.append(this.getImage(imageSrc));
     $question.append(this.getText(text));
 
@@ -362,62 +411,74 @@ class Test {
 
   getImage(src) {
     return $(document.createElement('img'))
-      .addClass('page-qn_question-img')
+      .addClass('page-qn_qn-img')
       .attr('src', src);
   }
 
   getText(text) {
     return $(document.createElement('div'))
-      .addClass('page-qn_question-text')
+      .addClass('page-qn_qn-text-container')
       .append(
         $(document.createElement('p')).text(text)
       );
   }
 
-  getAnswers(answers) {
+  getAnswers() {
+    const {answers} = this.data;
+
     return $(document.createElement('ul'))
       .addClass('page-qn_answers-list')
       .append(
-        ...answers.map(answer => {
-          return $(document.createElement('li'))
-            .data('isCorrect', answer.isCorrect)
+        ...answers.map(answer =>
+          $(document.createElement('li'))
             .addClass('page-qn_answer')
             .addClass('btn')
-            .text(answer.text);
-        })
+            .data('isCorrect', answer.isCorrect)
+            .text(answer.text)
+        )
       );
   }
 
-  getButtons(index) {
-     const $container = $(document.createElement('div'))
-      .addClass('page-qn_btns-container')
-      .append(
-        $(document.createElement('button'))
-          .addClass('page-qn_btn')
-          .addClass('btn')
-          .attr('data-link', 'page-qns-nav')
-          .text('Вернуться')
-      );
+  getButtons() {
+    const {index, questionsAmount} = this;
 
-     if (index + 1 < this.questionsAmout) {
-       $container.append(this.getButtonNext(index));
-     }
+    const $container = $(document.createElement('nav'))
+      .addClass('page-qn_nav-container')
+      .append(this.getButtonMenu());
 
-     return $container;
+    const isLastQuestion = index + 1 === questionsAmount;
+    if (!isLastQuestion) {
+      $container.append(this.getButtonNext(index));
+    }
+
+    return $container;
+  }
+
+  getButtonMenu() {
+    return $(document.createElement('button'))
+      .addClass('page-qn_nav-btn')
+      .addClass('btn')
+      .data('link', '.page-menu')
+      .text('Вернуться');
   }
 
   getButtonNext(index) {
-    const buttonNext = $(document.createElement('button'))
-      .addClass('page-qn_btn')
-      .addClass('page-qn_btn-next')
-      .addClass('btn')
-      .text('Пропустить');
+    const buttonNext = this.$buttonNext
+      = $(document.createElement('button'))
+        .addClass('page-qn_nav-btn')
+        .addClass('page-qn_nav-next')
+        .addClass('btn')
+        .text('Пропустить');
 
-    if (isFinite(index)) buttonNext.attr('data-link', `page-qn-${index + 2}`);
 
-    return buttonNext
+    if (isFinite(index) && index !== null) {
+      const nextQuestionIndex = index + 2;
+      buttonNext.data('link', `.page-qn-${nextQuestionIndex}`);
+    }
+
+    return buttonNext;
   }
-};
+}
 
 $(() => {
   navigation.enableLinksListener();

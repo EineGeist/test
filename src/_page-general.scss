@@ -7,7 +7,7 @@ $btn-horizontal-padding: 0.75em;
   margin: 10px 10px 18px;
   padding: $btn-vertical-padding $btn-horizontal-padding;
   background-color: $wild_sand;
-  border: 1px solid rgba($second_color,0.25);
+  border: 1px solid rgba($dark_color,0.25);
   border-radius: 5px;
   outline: 0;
   box-shadow: 0 2px 2px 0.5px rgba(0,0,0,0.15);
@@ -33,11 +33,11 @@ $btn-horizontal-padding: 0.75em;
 
   &--colored {
     border: 0;
-    background-color: $second_color;
-    color: $first_color;
+    background-color: $dark_color;
+    color: $light_color;
 
     &::after {
-      background-color: $first_color;
+      background-color: $light_color;
     }
   }
 
@@ -67,6 +67,8 @@ $btn-horizontal-padding: 0.75em;
   position: relative;
   width: 800px;
   min-height: 800px;
+  max-width: 100%;
+  max-height: 100%;
   overflow: hidden;
 
   box-shadow:
@@ -83,7 +85,7 @@ $btn-horizontal-padding: 0.75em;
   @include vp-flex-flow(column nowrap);
   width: 100%;
   height: 100%;
-  background-color: $first_color;
+  background-color: $light_color;
 
   @include vp-transition(0.3s ease);
 
@@ -98,82 +100,82 @@ $btn-horizontal-padding: 0.75em;
   }
 
   &:nth-child(8n+1) {
-    $first_color: $yellow_orange;
+    $accent_color: $yellow_orange;
 
     .page_header,
     .btn--colored,
     .page-qn_answer.is-selected {
-      background-color: $first_color;
+      background-color: $accent_color;
     }
   }
 
   &:nth-child(2) {
-    $first_color: $lochmara;
+    $accent_color: $lochmara;
 
     .page_header,
     .btn--colored,
     .page-qn_answer.is-selected {
-      background-color: $first_color;
+      background-color: $accent_color;
     }
   }
 
   &:nth-child(8n+3) {
-    $first_color: $persian_red;
+    $accent_color: $persian_red;
 
     .page_header,
     .btn--colored,
     .page-qn_answer.is-selected {
-      background-color: $first_color;
+      background-color: $accent_color;
     }
   }
 
   &:nth-child(8n+4) {
-    $first_color: $limeade;
+    $accent_color: $limeade;
 
     .page_header,
     .btn--colored,
     .page-qn_answer.is-selected {
-      background-color: $first_color;
+      background-color: $accent_color;
     }
   }
 
   &:nth-child(8n+5) {
-    $first_color: $bondi_blue;
+    $accent_color: $bondi_blue;
 
     .page_header,
     .btn--colored,
     .page-qn_answer.is-selected {
-      background-color: $first_color;
+      background-color: $accent_color;
     }
   }
 
   &:nth-child(8n+6) {
-    $first_color: $mandy;
+    $accent_color: $mandy;
 
     .page_header,
     .btn--colored,
     .page-qn_answer.is-selected {
-      background-color: $first_color;
+      background-color: $accent_color;
     }
   }
 
   &:nth-child(8n+7) {
-    $first_color: $moody_blue;
+    $accent_color: $moody_blue;
 
     .page_header,
     .btn--colored,
     .page-qn_answer.is-selected {
-      background-color: $first_color;
+      background-color: $accent_color;
     }
   }
 
   &:nth-child(8n+8) {
-    $first_color: $yellow_orange;
+    $accent_color: $glade_green;
 
     .page_header,
     .btn--colored,
     .page-qn_answer.is-selected {
-      background-color: $first_color;
+      background-color: $accent_color;
     }
   }
 }
@@ -183,7 +185,7 @@ $btn-horizontal-padding: 0.75em;
   font-size: 3em;
   font-weight: bold;
   text-align: center;
-  color: $first_color;
+  color: $light_color;
 }
 
 .page_content {

@@ -1,10 +1,10 @@
-.page-qns-nav_content {
+.page-menu_content {
   @include vp-flexbox;
   @include vp-flex-direction(column);
   @include vp-align-items(center);
 }
 
-.page-qns-nav_list {
+.page-menu_qns-list {
   @include vp-flex-grow(1);
   @include vp-flexbox;
   @include vp-flex-flow(column wrap);
@@ -14,7 +14,7 @@
   list-style: none;
 }
 
-.page-qns-nav_qn-link {
+.page-menu_qn-link {
   margin: 0 0 0.5em;
 
   &.is-answered {
@@ -22,10 +22,10 @@
   }
 }
 
-.page-qns-nav_finish:not(.btn--colored) {
-  color: rgba($second_color,0.5);
+.page-menu_finish:not(.btn--colored) {
+  color: rgba($dark_color,0.5);
 
   &::after {
-    background-color: rgba($second_color,0.5);
+    background-color: rgba($dark_color,0.5);
   }
 }

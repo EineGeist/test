@@ -1,3 +1,8 @@
+.page-qn {
+  left: 0;
+  top: -100%;
+}
+
 .page-qn_content {
   @include vp-flexbox;
   @include vp-flex-direction(column);
@@ -5,7 +10,7 @@
   padding: 0 15%;
 }
 
-.page-qn_question {
+.page-qn_qn {
   @include vp-flex-grow(1);
   @include vp-flexbox;
   @include vp-flex-flow(column wrap);
@@ -13,7 +18,7 @@
   padding: 5% 0;
 }
 
-.page-qn_question-text {
+.page-qn_qn-text-container {
   @include vp-flexbox;
   @include vp-flex-grow(1);
   @include vp-align-items(center);
@@ -36,12 +41,12 @@
   }
 }
 
-.page-qn_btns-container {
+.page-qn_nav-container {
   @include vp-flexbox;
   @include vp-justify-content(space-between);
   width: 100%;
 }
 
-.page-qn_btn {
+.page-qn_nav-btn {
   margin: 10px 0 12px;
 }
